@@ -5,6 +5,7 @@ import csv
 class DataSetRoutine(object):
     """ - Build the dataset using batch
         - save the data into excel files for backtests"""
+
     def __init__(self, webclient = None, frequency = 60, product = "BTC-USD", save = True):
         self.webclient = webclient
         self.frequency = frequency
@@ -19,15 +20,18 @@ class DataSetRoutine(object):
         
 
     def launch(self):
-        minutes = 0
-        if self.save:
+        minutes = 0 #counts the number of minutes to put in a batch
+        batch = pd.DataFrame()
+
+        if self.save: #creates file where the data are going to be stored
             myfile = open("Data/"+str(int(time.time()))+".csv", 'w')
             wr = csv.writer(myfile, quoting = csv.QUOTE_NONE, lineterminator = '\n')
             first = True #create a variable to indicate i need the to save the column names
             print("--file created--")
+
         while not self.stop:
             msg = self.webclient.getProductTicker(product = self.product)
-            if self.save:
+            if self.save:#writes the data in the file
                 if first:
                     wr.writerow(list(msg.keys()))
                     wr.writerow(list(msg.values()))
@@ -37,12 +41,23 @@ class DataSetRoutine(object):
                     wr.writerow(list(msg.values()))
                     print("--line added--")
 
+                
+
+            batch = batch.append([list(msg.values())])
+
+            if minutes == 300: #number of ticks to download
+                self._stop(myfile)
+
+            if minutes == 20:
+                batch.columns = list(msg.keys())
+                self.dataset = batch
+                batch = pd.DataFrame()
+
             time.sleep(self.frequency)
 
             minutes += 1
 
-            if minutes == 3:
-                self._stop(myfile)
+            
 
         print("-- Disconnected --")
 
