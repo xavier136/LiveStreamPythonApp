@@ -22,10 +22,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MySocketClient.py">
+    <Compile Include="DataSetRoutine.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GDAXAPIClient.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LiveStreamPythonApp.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
