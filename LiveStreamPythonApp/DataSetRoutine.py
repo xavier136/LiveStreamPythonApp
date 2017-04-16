@@ -15,6 +15,9 @@ class DataSetRoutine(object):
         self.stop = False
         self.batchsize = batchsize
 
+    def set_stop(self, x):
+        self.stop = x
+
     def _stop(self, file):
         self.stop = True
         file.close()

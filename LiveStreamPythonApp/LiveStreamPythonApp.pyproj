@@ -28,6 +28,9 @@
     <Compile Include="GDAXAPIClient.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GlobalRoutine.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LiveStreamPythonApp.py" />
   </ItemGroup>
   <ItemGroup>
