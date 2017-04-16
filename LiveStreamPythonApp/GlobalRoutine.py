@@ -5,13 +5,19 @@ class GlobalRoutine(object):
     """Combines all the operations : - dataset
                                      - prediction
                                      - Trading"""
-    def __init__(self, dataSetRoutine):
+    def __init__(self, dataSetRoutine, *args):
         self.dataSetRoutine = dataSetRoutine
+        self.computationRoutines = args
 
     def run(self):
-        #data_thread = Thread(target = self.dataSetRoutine.launch(), args = ())
-        #data_thread.start()
+        for routine in self.computationRoutines:
+           self.dataSetRoutine.register(routine)
+
+        data_thread = Thread(target = self.dataSetRoutine.launch(), args = ())
+        data_thread.start()
+        print("test")
+        
         #data_thread.join()
-        self.dataSetRoutine.launch()
+        #self.dataSetRoutine.launch()
 
 
