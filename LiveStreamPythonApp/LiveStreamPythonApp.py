@@ -5,7 +5,7 @@ from GlobalRoutine import GlobalRoutine
 import time
 
 GDAXClient = GDAXAPIClient() #Creates the link to the public API
-datasetRoutine = DataSetRoutine(GDAXClient, 1, "BTC-USD", False, 5)
+datasetRoutine = DataSetRoutine(GDAXClient, 1, "BTC-USD", False, 5, 60)
 computationRoutine = ComputationRoutine(datasetRoutine, "algo")
 globalRoutine = GlobalRoutine(datasetRoutine, computationRoutine)
 

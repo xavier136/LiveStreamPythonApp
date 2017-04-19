@@ -7,7 +7,7 @@ class DataSetRoutine(object):
     """ - Build the dataset using batch
         - save the data into excel files for backtests"""
 
-    def __init__(self, webclient = None, frequency = 60, product = "BTC-USD", save = True, batchsize = 20):
+    def __init__(self, webclient = None, frequency = 60, product = "BTC-USD", save = True, batchsize = 20, stopping_time = float("inf")):
         self.webclient = webclient
         self.frequency = frequency
         self.product = product
@@ -15,6 +15,8 @@ class DataSetRoutine(object):
         self.dataset = pd.DataFrame()
         self.stop = False
         self.batchsize = batchsize
+        self.stopping_time = stopping_time
+        self.myfile = None
         self.observers = [] #observers to act on change of the dataset
 
     def register(self, observer):#registers new observers to the dataset class
@@ -40,22 +42,21 @@ class DataSetRoutine(object):
 
     def _stop(self, file):#stops the routine and close the file
         self.stop = True
-        file.close()
+        if file is not None:
+            file.close()
         
 
     def launch(self):#retrieves the data and creates the datasets
         minutes = 0 #counts the number of minutes to put in a batch
-        batch = pd.DataFrame()
 
         if self.save: #creates file where the data are going to be stored
-            myfile = open("Data/"+str(int(time.time()))+".csv", 'w')
-            wr = csv.writer(myfile, quoting = csv.QUOTE_NONE, lineterminator = '\n')
+            self.myfile = open("Data/"+str(int(time.time()))+".csv", 'w')
+            wr = csv.writer(self.myfile, quoting = csv.QUOTE_NONE, lineterminator = '\n')
             first = True #create a variable to indicate i need the to save the column names
             print("--file created--")
 
         while not self.stop:
             msg = self.webclient.getProductTicker(product = self.product)
-            #book = self.webclient.getProductOrderBook(product = self.product)
             if self.save:#writes the data in the file
                 if first:
                     wr.writerow(list(msg.keys()))
@@ -65,23 +66,25 @@ class DataSetRoutine(object):
                 else:
                     wr.writerow(list(msg.values()))
                     print("--line added--")
-                if minutes == 300: #number of ticks to download
-                    self._stop(myfile)
 
-            batch = batch.append([list(msg.values())])            
+            self.dataset = self.dataset.append([list(msg.values())], ignore_index = True)            
 
-            if minutes % self.batchsize == 0 and minutes != 0: #size of the batch
-                batch.columns = list(msg.keys())
-                self.dataset = batch
-                batch = pd.DataFrame()
+            if minutes == self.batchsize == 0: #size of the batch
+                self.dataset.columns = list(msg.keys())
+                self.update()
+            elif minutes > self.batchsize:
+                self.dataset.drop(self.dataset.index[0], inplace = True)
                 self.update()
 
+            
             time.sleep(self.frequency)
+            
+            if minutes == self.stopping_time: #number of ticks to download
+                self._stop(self.myfile)
 
             minutes += 1
 
             
-
         print("-- Disconnected --")
 
     

@@ -15,7 +15,6 @@ class GlobalRoutine(object):
 
         data_thread = Thread(target = self.dataSetRoutine.launch(), args = ())
         data_thread.start()
-        print("test")
         
         #data_thread.join()
         #self.dataSetRoutine.launch()
