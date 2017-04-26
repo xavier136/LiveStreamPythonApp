@@ -1,13 +1,12 @@
-from GDAXAPIClient import GDAXAPIClient
-from DataSetRoutine import DataSetRoutine
-from ComputationRoutine import ComputationRoutine
-from GlobalRoutine import GlobalRoutine
-import time
+from GUIWindow import GUIWindow
+from PyQt5 import QtWidgets
+import sys
 
-GDAXClient = GDAXAPIClient() #Creates the link to the public API
-datasetRoutine = DataSetRoutine(GDAXClient, 1, "BTC-USD", False, 5, 60)
-computationRoutine = ComputationRoutine(datasetRoutine, "algo")
-globalRoutine = GlobalRoutine(datasetRoutine, computationRoutine)
+def main():
+  app = QtWidgets.QApplication(sys.argv)
+  form = GUIWindow()
+  form.show()
+  app.exec()
 
-globalRoutine.run()
-#datasetRoutine.launch()
+if __name__ == "__main__":
+   main()

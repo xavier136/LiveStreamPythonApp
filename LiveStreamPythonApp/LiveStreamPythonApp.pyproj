@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ApplicationThread.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ComputationRoutine.py">
       <SubType>Code</SubType>
     </Compile>
@@ -34,7 +37,11 @@
     <Compile Include="GlobalRoutine.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GUIWindow.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LiveStreamPythonApp.py" />
+    <Compile Include="mainwindow.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
