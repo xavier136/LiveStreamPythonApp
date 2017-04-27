@@ -13,13 +13,18 @@ class ApplicationThread(QThread):
 
     def __del__(self):
         self.wait()
-
+    
+    #run the algorithm
     def run(self):
-        GDAXClient = GDAXAPIClient() #Creates the link to the public API
-        datasetRoutine = DataSetRoutine(GDAXClient, 1, "BTC-USD", False, 5, 60)
-        computationRoutine = ComputationRoutine(datasetRoutine, "algo")
-        globalRoutine = GlobalRoutine(datasetRoutine, computationRoutine)
-        globalRoutine.run()
+        self.GDAXClient = GDAXAPIClient() #Creates the link to the public API
+        self.datasetRoutine = DataSetRoutine(self.GDAXClient, 1, "BTC-USD", True, 5, 60)
+        self.computationRoutine = ComputationRoutine(self.datasetRoutine, "algo")
+        self.globalRoutine = GlobalRoutine(self.datasetRoutine, self.computationRoutine)
+        self.globalRoutine.run()
+    
+    #stops the algorithm properly, closes all opened files. This is required before dropping the Thread
+    def pre_stop(self):
+        self.datasetRoutine._stop(self.datasetRoutine.get_myfile())
 
 
 

@@ -11,11 +11,17 @@ class GUIWindow(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.setupUi(self)
         self.startButton.clicked.connect(self.startApplication)
 
+    def stopApplication(self):
+        self.appThread.pre_stop()
+        self.appThread.terminate()
+        print("Application Stopped ...")
+
     def startApplication(self):
+        print("Application Started ...")
         self.appThread = ApplicationThread()
         self.appThread.start()
         self.stopButton.setEnabled(True)
-        self.stopButton.clicked.connect(self.appThread.terminate)
+        self.stopButton.clicked.connect(self.stopApplication)
         self.startButton.setEnabled(True)
         
 

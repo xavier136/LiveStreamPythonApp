@@ -40,10 +40,14 @@ class DataSetRoutine(object):
     def get_dataset(self):#getter for the dataset
         return self.dataset
 
+    def get_myfile(self): #getter for the myfile 
+        return self.myfile
+
     def _stop(self, file):#stops the routine and close the file
         self.stop = True
         if file is not None:
             file.close()
+        print("-- Disconnected --")
         
 
     def launch(self):#retrieves the data and creates the datasets
@@ -85,7 +89,7 @@ class DataSetRoutine(object):
             minutes += 1
 
             
-        print("-- Disconnected --")
+        
 
     
 
