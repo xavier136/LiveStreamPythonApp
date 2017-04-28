@@ -470,7 +470,7 @@ class Ui_MainWindow(object):
 "\n"
 "QCheckBox::indicator:checked\n"
 "{\n"
-"    image:url(:/images/checkbox.png);\n"
+"    image:url(images/checkbox.png);\n"
 "}\n"
 "\n"
 "QCheckBox::indicator:disabled, QRadioButton::indicator:disabled\n"
@@ -518,6 +518,7 @@ class Ui_MainWindow(object):
         self.horizonInput.setObjectName("horizonInput")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.horizonInput)
         self.dataSaveInput = QtWidgets.QCheckBox(self.formLayoutWidget)
+        self.dataSaveInput.setChecked(True)
         self.dataSaveInput.setObjectName("dataSaveInput")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.dataSaveInput)
         MainWindow.setCentralWidget(self.centralWidget)

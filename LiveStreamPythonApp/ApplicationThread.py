@@ -17,7 +17,7 @@ class ApplicationThread(QThread):
     #run the algorithm
     def run(self):
         self.GDAXClient = GDAXAPIClient() #Creates the link to the public API
-        self.datasetRoutine = DataSetRoutine(self.GDAXClient, 1, "BTC-USD", True, 5, 60)
+        self.datasetRoutine = DataSetRoutine(self.GDAXClient, 1, "BTC-USD", False, 5, 60)
         self.computationRoutine = ComputationRoutine(self.datasetRoutine, "algo")
         self.globalRoutine = GlobalRoutine(self.datasetRoutine, self.computationRoutine)
         self.globalRoutine.run()

@@ -17,12 +17,16 @@ class GUIWindow(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         print("Application Stopped ...")
 
     def startApplication(self):
+        product = self.productInput.text()
+        frequency = self.frequencyInput.text()
+        horizon = self.horizonInput.text()
+        
         print("Application Started ...")
         self.appThread = ApplicationThread()
         self.appThread.start()
         self.stopButton.setEnabled(True)
         self.stopButton.clicked.connect(self.stopApplication)
-        self.startButton.setEnabled(True)
+        self.startButton.setEnabled(False)
         
 
     
