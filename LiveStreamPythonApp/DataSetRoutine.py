@@ -19,38 +19,45 @@ class DataSetRoutine(object):
         self.myfile = None
         self.observers = [] #observers to act on change of the dataset
 
-    def register(self, observer):#registers new observers to the dataset class
+    #registers new observers to the dataset class
+    def register(self, observer):
         if observer not in self.observers:
             self.observers.append(observer)
     
-    def unregister(self, observer):#unregisters new observers from the dataset class
+    #unregisters new observers from the dataset class
+    def unregister(self, observer):
         if observer in self.observers:
             self.observers.remove(observer)
 
-    def update(self, *args, **kwargs):#triggers the oberservers when the dataset changes
+    #triggers the oberservers when the dataset changes
+    def update(self, *args, **kwargs):
         threads = []
         for observer in self.observers:
             t = Thread(target = observer.onDataSetChange(), args = (args, kwargs,))
             threads.append(t)
             t.start
 
-    def set_stop(self, x):#setter for the stop attribute
+    #setter for the stop attribute
+    def set_stop(self, x):
         self.stop = x
 
-    def get_dataset(self):#getter for the dataset
+    #getter for the dataset
+    def get_dataset(self):
         return self.dataset
-
-    def get_myfile(self): #getter for the myfile 
+    
+    #getter for the myfile 
+    def get_myfile(self): 
         return self.myfile
-
-    def _stop(self, file):#stops the routine and close the file
+    
+    #stops the routine and close the file
+    def _stop(self, file):
         self.stop = True
         if file is not None:
             file.close()
         print("-- Disconnected --")
-        
-
-    def launch(self):#retrieves the data and creates the datasets
+     
+    #retrieves the data and creates the datasets
+    def launch(self):
         minutes = 0 #counts the number of minutes to put in a batch
 
         if self.save: #creates file where the data are going to be stored
