@@ -20,12 +20,13 @@ class GUIWindow(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     #starts the application
     def startApplication(self):
-        product = self.productInput.text() #gets the product code from the GUI
-        frequency = self.frequencyInput.text() #gets the frequency from the GUI
-        horizon = self.horizonInput.text() #gets the horizon from the GUI
+        product = self.productInput.currentText() #gets the product code from the GUI
+        frequency = self.frequencyInput.value() #gets the frequency from the GUI
+        horizon = self.horizonInput.value() #gets the horizon from the GUI
+        save_data = self.dataInput.isChecked() #check if the data need to be saved or not
         
         print("Application Started ...")
-        self.appThread = ApplicationThread() #creates a Thread for the application
+        self.appThread = ApplicationThread(product, frequency, horizon, save_data) #creates a Thread for the application
         self.appThread.start() #starts the application and runs the thread
         self.stopButton.setEnabled(True) #enables stop button
         self.stopButton.clicked.connect(self.stopApplication) #associates the function stop application with the stop button
