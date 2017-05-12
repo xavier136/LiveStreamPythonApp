@@ -42,6 +42,9 @@
     </Compile>
     <Compile Include="LiveStreamPythonApp.py" />
     <Compile Include="mainwindow.py" />
+    <Compile Include="MLP.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
