@@ -3,6 +3,7 @@ from GDAXAPIClient import GDAXAPIClient
 from DataSetRoutine import DataSetRoutine
 from ComputationRoutine import ComputationRoutine
 from GlobalRoutine import GlobalRoutine
+from MLP import MLP
 
 class ApplicationThread(QThread):
     """Thread running the Application. It enables to have the GUI and the applicaton
