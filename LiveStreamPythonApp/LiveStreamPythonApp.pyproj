@@ -45,6 +45,9 @@
     <Compile Include="MLP.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TradingRoutine.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
