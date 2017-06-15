@@ -15,13 +15,17 @@ class MLP(object):
     #Builds a standards Sequential Neural Network
     def buildModel(self):
         model = Sequential()
+        
+        #input layer
         model.add(Dense(self.neurons, kernel_initializer = self.kernel_initializer, bias_initializer = self.bias_initializer, input_shape = self.input_shape)) #adds first layer
         model.add(Activation(self.activation))
         
+        #hidden layers
         for i in range(self.hidden_layers):#creates all the hidden layers 
             model.add(Dense(self.neurons, kernel_initializer = self.kernel_initializer, bias_initializer = self.bias_initializer))
             model.add(Activation(self.activation))
-
+        
+        #output layers
         model.add(Dense(4, kernel_initializer = self.kernel_initializer, bias_initializer = self.bias_initializer)) #creates the last layer and outputs 2 elements : probability of winning with a market order, probability of winning with a limit order
         model.add(Activation(self.activation))
 

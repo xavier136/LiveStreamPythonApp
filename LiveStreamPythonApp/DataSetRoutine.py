@@ -1,7 +1,7 @@
 import pandas as pd
 import time
 import csv
-from threading import Thread
+#from threading import Thread
 
 class DataSetRoutine(object):
     """ - Build the dataset using batch
@@ -36,11 +36,12 @@ class DataSetRoutine(object):
     def update(self, *args, **kwargs):
         self.create_dataset()
         self.save_dataset()
-        threads = []
+        #threads = []
         for observer in self.observers:
-            t = Thread(target = observer.onDataSetChange(), args = (args, kwargs,))
-            threads.append(t)
-            t.start
+            #t = Thread(target = observer.onDataSetChange(), args = (args, kwargs,))
+            #threads.append(t)
+            #t.start
+            observer.onDataSetChange()
 
     #setter for the stop attribute
     def set_stop(self, x):
