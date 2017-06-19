@@ -15,10 +15,11 @@ class TradingRoutine(object):
         order_type = self.selectOrder(prediction)
         print(prediction[0])
         print(order_type)
-        self.passOrders(1)
+        self.passOrders(3)
     
     #select the order type according to the probability of having a positive return
     def selectOrder(self, prediction):
+        #select the highest probability and only if it's > 50%
         choice = np.argmax(prediction[0])
         if (prediction[0][choice] > 0):
             return choice
@@ -27,14 +28,23 @@ class TradingRoutine(object):
 
     #Pass the orders to the market
     def passOrders(self, choice):
+        #get the bid ask
+        bid = self.GDAXClient.getProductOrderBook(level = 1)["bids"][0][0]
+        ask = self.GDAXClient.getProductOrderBook(level = 1)["asks"][0][0]
+    
+
         if (choice == 0):
-            pass
+            #pass a buy market order
+            self.GDAXClient.buy({"product_id": self.GDAXClient.productId, "type" : "market", "size" : self.order_size})
         elif (choice == 1):
-            self.GDAXClient.buy({"product_id": "BTC-USD", "price" : 2690, "size" : self.order_size})
+            #pass a buy limit order at the best ask
+            self.GDAXClient.buy({"product_id": self.GDAXClient.productId, "price" : bid, "size" : self.order_size})
         elif (choice == 2):
-            pass
+            #pass a market sell order 
+            self.GDAXClient.sell({"product_id": self.GDAXClient.productId, "type" : "market", "size" : self.order_size})
         else:
-            pass
+            #pass a limit sell order at the best bid
+            self.GDAXClient.sell({"product_id": self.GDAXClient.productId, "price" : ask, "size" : self.order_size})
        
 
 
