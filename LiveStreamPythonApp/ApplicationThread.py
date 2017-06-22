@@ -30,6 +30,7 @@ class ApplicationThread(QThread):
         self.tradingRoutine = TradingRoutine(self.computationRoutine, self.GDAXClient, 5, 0.01)#Routine that performs all the trading aspect of the application
         self.globalRoutine = GlobalRoutine(self.datasetRoutine, self.computationRoutine, self.tradingRoutine)# Global routine that aggregates all the routines together
         self.globalRoutine.run()#Run the global routine and therefore the whole application
+
     #stops the algorithm properly, closes all opened files. This is required before dropping the Thread
     def pre_stop(self):
         self.datasetRoutine._stop(self.datasetRoutine.get_myfile())
