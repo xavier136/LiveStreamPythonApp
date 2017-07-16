@@ -24,7 +24,7 @@ class ApplicationThread(QThread):
     def run(self):
         self.MLP = MLP(1, 10, 'sigmoid', 'random_uniform', 'zeros', (9,))#creates the MLP used for the learning
         #self.GDAXClient = GDAX.PublicClient(api_url = "https://api.gdax.com") #Creates the link to the GDAX public API, use the URL to determine if using the sandbox or real market data
-        self.GDAXClient = GDAX.AuthenticatedClient("37e8463aac7150570989ab3c0aea9613", "/LpL2PU1qCzFS4cpUC8PjUgBa6MMydnuZf2BOqDUa+D1BFLQIIHHEcxqbsxNoHyabAPmF4O5d21VIo0cu5IGcA==", "1k0qn49xd7q", api_url = "https://api-public.sandbox.gdax.com") #Creates the link to the GDAX private authentificated API, use the URL to determine if using the sandbox or real market data
+        self.GDAXClient = GDAX.AuthenticatedClient("795c82cc85335a4a339eadf2efbb5c27", "S457308fI6lVR5oYjRS7MrM9CoyMFRVQdfsOLk6nArFP02719Kq4lBzIw1dYpy0s5w+2Y63X/IwN0uue90VgTA==", "uopo4gz6hkq", api_url = "https://api-public.sandbox.gdax.com") #Creates the link to the GDAX private authentificated API, use the URL to determine if using the sandbox or real market data
         self.datasetRoutine = DataSetRoutine(self.GDAXClient, self.frequency , self.product, self.save, self.horizon) #routine that builds the dataset/treats the raw data obtained from the API
         self.computationRoutine = ComputationRoutine(self.datasetRoutine, self.MLP)#Routine that performs the prediction/computation on the dataset
         self.tradingRoutine = TradingRoutine(self.computationRoutine, self.GDAXClient, 5, 0.01)#Routine that performs all the trading aspect of the application
