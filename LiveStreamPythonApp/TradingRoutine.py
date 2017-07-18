@@ -15,7 +15,7 @@ class TradingRoutine(object):
         order_type = self.selectOrder(prediction)
         print(prediction[0])
         print(order_type)
-        self.passOrdersPrediction(0)
+        # self.passOrdersPrediction(0)
     
     #select the order type according to the probability of having a positive return
     def selectOrder(self, prediction):

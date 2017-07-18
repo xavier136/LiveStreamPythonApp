@@ -24,9 +24,12 @@ class GUIWindow(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         frequency = self.frequencyInput.value() #gets the frequency from the GUI
         horizon = self.horizonInput.value() #gets the horizon from the GUI
         save_data = self.dataInput.isChecked() #check if the data need to be saved or not
+        api_key = self.apiKeyInput.text() #gets the API Key
+        api_secret = self.apiSecretInput.text() #gets the API Secret
+        password = self.passwordInput.text() #gets the password
         
         print("Application Started ...")
-        self.appThread = ApplicationThread(product, frequency, horizon, save_data) #creates a Thread for the application
+        self.appThread = ApplicationThread(product, frequency, horizon, save_data, api_key, api_secret, password) #creates a Thread for the application
         self.appThread.start() #starts the application and runs the thread
         self.stopButton.setEnabled(True) #enables stop button
         self.stopButton.clicked.connect(self.stopApplication) #associates the function stop application with the stop button
