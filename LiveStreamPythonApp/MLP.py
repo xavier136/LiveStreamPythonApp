@@ -26,7 +26,7 @@ class MLP(object):
             model.add(Activation(self.activation))
         
         #output layers
-        model.add(Dense(4, kernel_initializer = self.kernel_initializer, bias_initializer = self.bias_initializer)) #creates the last layer and outputs 2 elements : probability of winning with a market order, probability of winning with a limit order
+        model.add(Dense(2, kernel_initializer = self.kernel_initializer, bias_initializer = self.bias_initializer)) #creates the last layer and outputs 2 elements : probability of winning with a market order, buy/sell
         model.add(Activation(self.activation))
 
         model.compile(optimizer='rmsprop', loss='mse')#compiles the model
