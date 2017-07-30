@@ -12,6 +12,7 @@ class ComputationRoutine(object):
         self.observers = [] #observers to act on change of the dataset
         self.previous_mid = None #previous mid, needed for the reward function
         self.previous_prediction = None #previous prediction, needed for the reward function
+        self.previous_dataset = None
 
     #register observers to this class
     def register(self, observer):
@@ -31,12 +32,17 @@ class ComputationRoutine(object):
         #    threads.append(t)
         #    t.start
             observer.onPredictionChange()
+    
+    #dynamically choses the learning rate
+    def computeLearningRate(self, probas, prediction):
+        learning_rate = 0
+        for i in range(len(prediction)):
+            learning_rate +=  abs(probas[i] - prediction[0][i]) / (10 * len(prediction))
+        return learning_rate
 
-    def computeReward(self, previous_mid, new_mid, prediction):
-        pass
-
-    def updateNN(self, reward):
-        pass
+    def updateNN(self, learning_rate, probas, previous_data):
+        self.algo.recompileModel(self.model, learning_rate)
+        self.model.train_on_batch(np.array(previous_data), np.array(probas).reshape((1, 2)))
 
     #every time a new batch of data is sent we run the algo and get a prediction
     # we also check if the previous prediction was accurate and update the algo accordingly
@@ -45,10 +51,20 @@ class ComputationRoutine(object):
         current_mid = (float(full_dataset[['ask']].iloc[0, 0]) + float(full_dataset[['bid']].iloc[0, 0])) / 2
         X_dataset = np.array(full_dataset[['ask', 'bid', 'price', 'size', 'volume', 'spread', 'smartPrice', 'volumeImbalance', 'volumePerOrderImbalance']])
         self.prediction = self.model.predict(np.array(X_dataset))
+        print(current_mid)
         self.update()
         if self.previous_mid and not (self.previous_prediction is None):
-            reward = self.computeReward(self.previous_mid, current_mid, self.previous_prediction)
-            self.updateNN(reward)
+            if self.previous_mid > current_mid:
+                actual_prob = [0, 1]
+            elif self.previous_mid < current_mid:
+                actual_prob = [1, 0]  
+            else:
+                actual_prob = [0, 0]          
+            learning_rate = self.computeLearningRate(actual_prob, self.previous_prediction)
+            print('learning rate :' + str(learning_rate))
+            self.updateNN(learning_rate, actual_prob, self.previous_dataset)
+
         self.previous_prediction = self.prediction
         self.previous_mid = current_mid
+        self.previous_dataset = X_dataset
 

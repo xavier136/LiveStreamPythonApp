@@ -1,5 +1,6 @@
 from keras.models import Sequential
 from keras.layers import Dense, Activation
+from keras.optimizers import RMSprop
 
 class MLP(object):
     """Builds the Multilayers Perceptron"""
@@ -31,6 +32,11 @@ class MLP(object):
 
         model.compile(optimizer='rmsprop', loss='mse')#compiles the model
         return model
+
+    #Recompiles the model with a new learning rate
+    def recompileModel(self, model, learning_rate):
+        backprop = RMSprop(lr=learning_rate, rho=0.9, epsilon=1e-08, decay=0.0)
+        model.compile(optimizer=backprop, loss='mse')#compiles the model
 
 
 
