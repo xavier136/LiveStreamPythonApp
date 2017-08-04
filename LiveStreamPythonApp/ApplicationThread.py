@@ -37,6 +37,7 @@ class ApplicationThread(QThread):
     #stops the algorithm properly, closes all opened files. This is required before dropping the Thread
     def pre_stop(self):
         self.datasetRoutine._stop(self.datasetRoutine.get_myfile())
+        self.tradingRoutine._stop(self.tradingRoutine.get_myfile())
         self.GDAXClient.cancelAll(product = self.product)
 
 
