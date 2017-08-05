@@ -5,9 +5,10 @@ import csv
 class TradingRoutine(object):
     """Routine that manages all the trading execution and order management"""
 
-    def __init__(self, computationRoutine, GDAXClient, holding_time, order_size):
+    def __init__(self, computationRoutine, GDAXClient, authentificated, holding_time, order_size):
         self.computationRoutine = computationRoutine
         self.GDAXClient = GDAXClient
+        self.authentificated = authentificated
         self.holding_time = holding_time
         self.order_size = order_size
         self.myfile = None
@@ -44,7 +45,8 @@ class TradingRoutine(object):
         print(prediction[0])
         print(order_type)
         self.save_decision(prediction, order_type, self.computationRoutine.current_mid)
-        #self.passOrdersPrediction(order_type)
+        if self.authentificated:
+            self.passOrdersPrediction(order_type)
             
 
     #select the order type according to the probability of having a positive return
