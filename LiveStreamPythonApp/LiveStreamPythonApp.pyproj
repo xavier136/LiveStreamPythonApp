@@ -42,6 +42,9 @@
     <Compile Include="MLP.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Portfolio.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="TradingRoutine.py">
       <SubType>Code</SubType>
     </Compile>
