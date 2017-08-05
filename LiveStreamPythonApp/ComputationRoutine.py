@@ -37,7 +37,7 @@ class ComputationRoutine(object):
     #dynamically choses the learning rate
     def computeLearningRate(self, probas, prediction):
         learning_rate = 0
-        for i in range(len(prediction)):
+        for i in range(len(prediction[0])):
             learning_rate +=  abs(probas[i] - prediction[0][i]) / (10 * len(prediction))
         return learning_rate
 
