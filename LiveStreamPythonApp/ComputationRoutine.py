@@ -36,10 +36,10 @@ class ComputationRoutine(object):
     
     #dynamically choses the learning rate
     def computeLearningRate(self, probas, prediction):
-        learning_rate = 0
+        learning_rate = []
         for i in range(len(prediction[0])):
-            learning_rate +=  abs(probas[i] - prediction[0][i]) / (10 * len(prediction))
-        return learning_rate
+            learning_rate.append(abs(probas[i] - prediction[0][i]) / (10))
+        return max(learning_rate)
 
     def updateNN(self, learning_rate, probas, previous_data):
         self.algo.recompileModel(self.model, learning_rate)

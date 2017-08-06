@@ -13,15 +13,14 @@ class TradingRoutine(object):
         self.authentificated = authentificated
         self.max_ccy_holding = max_ccy_holding
         self.order_size = order_size
-        self.holding = 0
         self.myfile = None
         self.first = False
         self.wr = None #writter for the data file
         self.create_save_file()
         if authentificated:
-            self.portfolio = Portfolio(10000, 0)
+            self.portfolio = Portfolio(float(self.GDAXClient.getPosition()['accounts']['USD']['balance']),float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']), self.max_ccy_holding)
         else:
-            self.portfolio = Portfolio(10000, 0)
+            self.portfolio = Portfolio(10000, 0, self.max_ccy_holding)
 
     #creates the file where to save the data
     def create_save_file(self):
@@ -30,11 +29,14 @@ class TradingRoutine(object):
         self.first = True #create a variable to indicate i need the to save the column names
     
     #saves the dataset into a file
-    def save_decision(self, prediction, order_type, mid, holding, portfolio):
+    def save_decision(self, prediction, order_type, mid, portfolio):
         if self.first:
             self.wr.writerow(['Timestamp', 'Market Long proba (%)', 'Market Short proba (%)', 'Order Type', 'Market Mid', 'Holding', 'Holding Value'])
             self.first = False #no need for the columns names after the first iteration
-        self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, holding, portfolio.get_portfolio_value(mid)])
+        if self.authentificated:
+            self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']), float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']) * mid])
+        else:
+            self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, portfolio.get_crypto(), portfolio.get_portfolio_value(mid)])
 
     #getter for the myfile 
     def get_myfile(self): 
@@ -54,13 +56,11 @@ class TradingRoutine(object):
         if self.authentificated:
             self.passOrdersPrediction(order_type)
         else:
-            if order_type == 0 and self.holding < self.max_ccy_holding:
-                self.holding += self.order_size
+            if order_type == 0:
                 self.portfolio.buy_crypto(self.order_size, self.computationRoutine.current_mid, 0)
-            elif order_type == 1 and self.holding > 0:
-                self.holding -= self.order_size
+            elif order_type == 1:
                 self.portfolio.sell_crypto(self.order_size, self.computationRoutine.current_mid, 0)
-        self.save_decision(prediction, order_type, self.computationRoutine.current_mid, self.holding, self.portfolio)
+        self.save_decision(prediction, order_type, self.computationRoutine.current_mid, self.portfolio)
 
             
 
@@ -68,7 +68,7 @@ class TradingRoutine(object):
     def selectOrder(self, prediction):
         #select the highest probability and only if it's > 50% for selling 
         choice = np.argmax(prediction[0])
-        if (choice == 0 and prediction[0][choice] > 0.65) or (choice == 1 and prediction[0][choice] > 0.5):
+        if (choice == 0 and prediction[0][choice] > 0.5) or (choice == 1 and prediction[0][choice] > 0.5):
             return choice
         else:
             return -1
