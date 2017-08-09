@@ -47,12 +47,30 @@ class TradingRoutine(object):
         if file is not None:
             file.close()
 
+    def printLive(self, prediction, order_type):
+        if order_type == 1:
+            order = 'Short'
+        elif order_type == 0:
+            order = 'Long'
+        else:
+            order = 'None'
+        print('#'*60)
+        print('Current mid: ' + str(self.computationRoutine.current_mid))
+        print('Predictions: Win Long (' + str(prediction[0][0]) + ') - Win Short (' + str(prediction[0][1]) + ')')
+        print('Order Passed: ' + order)
+        if self.authentificated:
+            print('CryptoCurrency Holding: ' + self.GDAXClient.getPosition()['accounts']['BTC']['balance'])
+            print('Portfolio Value: ' + str(float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']) * self.computationRoutine.current_mid))
+
+        else:
+            print('CryptoCurrency Holding: ' + str(self.portfolio.get_crypto()))
+            print('Portfolio Value: ' + str(self.portfolio.get_portfolio_value(self.computationRoutine.current_mid)))
+
     #executed everytime a prediction is sent through
     def onPredictionChange(self):
         prediction = self.computationRoutine.prediction
         order_type = self.selectOrder(prediction)
-        print(prediction[0])
-        print(order_type)
+        self.printLive(prediction, order_type)
         if self.authentificated:
             self.passOrdersPrediction(order_type)
         else:
