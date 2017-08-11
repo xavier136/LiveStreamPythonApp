@@ -21,14 +21,17 @@ class Portfolio(object):
         return self.initial_crypto
 
     def buy_crypto(self, quantity, mid, fee):
-        if self.crypto < self.max_holding:
+        if self.crypto < self.max_holding and self.cash > quantity * mid:
             self.crypto += quantity
             self.cash -= quantity * mid * (1 - fee)
 
     def sell_crypto(self, quantity, mid, fee):
-        if self.crypto > 0:
+        if self.crypto > 0 and self.crypto >= quantity:
             self.crypto -= quantity
             self.cash += quantity * mid * (1 - fee)
+        elif self.crypto > 0 and self.crypto  < quantity:
+            self.cash += (self.crypto) * mid * (1 - fee)
+            self.crypto = 0
 
     def get_portfolio_value(self, mid):
         return self.cash + self.crypto * mid

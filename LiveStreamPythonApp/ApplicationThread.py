@@ -33,7 +33,7 @@ class ApplicationThread(QThread):
             self.GDAXClient = GDAX.PublicClient(api_url = "https://api.gdax.com") #Creates the link to the GDAX public API, use the URL to determine if using the sandbox or real market data
         self.datasetRoutine = DataSetRoutine(self.GDAXClient, self.frequency , self.product, self.save, self.horizon) #routine that builds the dataset/treats the raw data obtained from the API
         self.computationRoutine = ComputationRoutine(self.datasetRoutine, self.MLP)#Routine that performs the prediction/computation on the dataset
-        self.tradingRoutine = TradingRoutine(self.computationRoutine, self.GDAXClient, self.authentificated, 1, 0.1)#Routine that performs all the trading aspect of the application
+        self.tradingRoutine = TradingRoutine(self.computationRoutine, self.GDAXClient, self.authentificated, 5, 0.5)#Routine that performs all the trading aspect of the application
         self.globalRoutine = GlobalRoutine(self.datasetRoutine, self.computationRoutine, self.tradingRoutine)# Global routine that aggregates all the routines together
         self.globalRoutine.run()#Run the global routine and therefore the whole application
 

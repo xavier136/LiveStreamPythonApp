@@ -70,17 +70,16 @@ class TradingRoutine(object):
     def onPredictionChange(self):
         prediction = self.computationRoutine.prediction
         order_type = self.selectOrder(prediction)
-        self.printLive(prediction, order_type)
         if self.authentificated:
             self.passOrdersPrediction(order_type)
         else:
             if order_type == 0:
                 self.portfolio.buy_crypto(self.order_size, self.computationRoutine.current_mid, 0)
             elif order_type == 1:
-                self.portfolio.sell_crypto(self.order_size, self.computationRoutine.current_mid, 0)
+                self.portfolio.sell_crypto(2 * self.order_size, self.computationRoutine.current_mid, 0)
         self.save_decision(prediction, order_type, self.computationRoutine.current_mid, self.portfolio)
+        self.printLive(prediction, order_type)
 
-            
 
     #select the order type according to the probability of having a positive return
     def selectOrder(self, prediction):
