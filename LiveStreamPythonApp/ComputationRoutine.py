@@ -39,7 +39,7 @@ class ComputationRoutine(object):
     def computeLearningRate(self, probas, prediction, factor):
         learning_rate = []
         for i in range(len(prediction[0])):
-            learning_rate.append((abs(probas[i] - prediction[0][i]) / 2) * factor)
+            learning_rate.append((abs(probas[i] - prediction[0][i]) / 5) * factor)
         return max(learning_rate)
 
     def updateNN(self, learning_rate, probas, previous_data):

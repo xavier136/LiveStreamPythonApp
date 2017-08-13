@@ -1,9 +1,9 @@
 from PyQt5 import QtWidgets
 from ApplicationThread import ApplicationThread
-import mainwindow
+import welcomewindow
 import sys
 
-class GUIWindow(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
+class GUIWindow(QtWidgets.QMainWindow, welcomewindow.UI_MainWindow):
     """Creates the main window for the GUI"""
     
     def __init__(self):
