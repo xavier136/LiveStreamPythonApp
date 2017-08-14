@@ -1,12 +1,12 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-from GUIWindow import GUIWindow
+from GUIWindow import WelcomeWindow, AuthentificationWindow
 from PyQt5 import QtWidgets
 import sys
 
 def main():
   app = QtWidgets.QApplication(sys.argv)
-  form = GUIWindow()
+  form = AuthentificationWindow()
   form.show()
   app.exec()
 

@@ -1,15 +1,30 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from ApplicationThread import ApplicationThread
 import welcomewindow
+import stackedwidget
+import algoSetting
 import sys
 
-class GUIWindow(QtWidgets.QMainWindow, welcomewindow.UI_MainWindow):
+class WelcomeWindow(QtWidgets.QMainWindow, welcomewindow.Ui_MainWindow):
     """Creates the main window for the GUI"""
     
     def __init__(self):
         super(self.__class__, self).__init__()
         self.setupUi(self)#Creates the GUI from the mainwindow.py file
-        self.startButton.clicked.connect(self.startApplication)#associates the function startApplication to the start button
+        self.simulationModeButton.clicked.connect(self.startSimulation)#associates the function startSimulation to the start simulation button
+        self.sandBoxModeButton.clicked.connect(self.startSandBox)#associates the function startSandBox to the start sandbox button
+        self.authentificatedModeButton.clicked.connect(self.startAuthentificated)#associates the function startAuthentificated to the start button
+
+    def startSimulation(self):
+        pass
+
+    def startSandBox(self):
+        stack = AuthentificationWindow()
+        self.centralwidget.setCurrentWidget(stack.page_2)
+        print('test')
+
+    def startAuthentificated(self):
+        pass
 
     #stops the application
     def stopApplication(self):
@@ -34,8 +49,15 @@ class GUIWindow(QtWidgets.QMainWindow, welcomewindow.UI_MainWindow):
         self.stopButton.setEnabled(True) #enables stop button
         self.stopButton.clicked.connect(self.stopApplication) #associates the function stop application with the stop button
         self.startButton.setEnabled(False) #disables the start button to prevent running the application multiple times in parallel
-        
-
+ 
+       
+class AuthentificationWindow(QtWidgets.QStackedWidget, stackedwidget.Ui_StackedWidget):
     
+    def __init__(self):
+        super(self.__class__, self).__init__()
+        self.setupUi(self)#Creates the GUI from the mainwindow.py file
+        self.startButton.clicked.connect(self.startfunc)
 
+    def startfunc(self):
+        self.setCurrentWidget(self.page_2)
 
