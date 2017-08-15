@@ -10,16 +10,18 @@ class ApplicationThread(QThread):
     """Thread running the Application. It enables to have the GUI and the applicaton
     running in parallel."""
     
-    def __init__(self, product, frequency, horizon, save, api_key, api_secret, password):
+    def __init__(self, product, frequency, maxHolding, tradeSize, save, auth, url, api_key, api_secret, password):
         QThread.__init__(self)
         self.product = product
-        self.horizon = horizon
+        self.maxHolding = maxHolding
+        self.tradeSize = tradeSize
         self.frequency = frequency
         self.save = save
         self.api_key = api_key
         self.api_secret = api_secret
         self.password = password
-        self.authentificated = False
+        self.authentificated = auth
+        self.url = url
 
     def __del__(self):
         self.wait()
@@ -28,12 +30,12 @@ class ApplicationThread(QThread):
     def run(self):
         self.MLP = MLP(1, 10, 'sigmoid', 'random_uniform', 'zeros', (9,))#creates the MLP used for the learning
         if self.authentificated:
-            self.GDAXClient = GDAX.AuthenticatedClient(self.api_key, self.api_secret, self.password, api_url = "https://api-public.sandbox.gdax.com") #Creates the link to the GDAX private authentificated API, use the URL to determine if using the sandbox or real market data
+            self.GDAXClient = GDAX.AuthenticatedClient(self.api_key, self.api_secret, self.password, api_url = self.url) #Creates the link to the GDAX private authentificated API, use the URL to determine if using the sandbox or real market data
         else:
-            self.GDAXClient = GDAX.PublicClient(api_url = "https://api.gdax.com") #Creates the link to the GDAX public API, use the URL to determine if using the sandbox or real market data
-        self.datasetRoutine = DataSetRoutine(self.GDAXClient, self.frequency , self.product, self.save, self.horizon) #routine that builds the dataset/treats the raw data obtained from the API
+            self.GDAXClient = GDAX.PublicClient(api_url = self.url) #Creates the link to the GDAX public API, use the URL to determine if using the sandbox or real market data
+        self.datasetRoutine = DataSetRoutine(self.GDAXClient, self.frequency , self.product, self.save) #routine that builds the dataset/treats the raw data obtained from the API
         self.computationRoutine = ComputationRoutine(self.datasetRoutine, self.MLP)#Routine that performs the prediction/computation on the dataset
-        self.tradingRoutine = TradingRoutine(self.computationRoutine, self.GDAXClient, self.authentificated, 5, 0.5)#Routine that performs all the trading aspect of the application
+        self.tradingRoutine = TradingRoutine(self.computationRoutine, self.GDAXClient, self.authentificated, self.maxHolding, self.tradeSize)#Routine that performs all the trading aspect of the application
         self.globalRoutine = GlobalRoutine(self.datasetRoutine, self.computationRoutine, self.tradingRoutine)# Global routine that aggregates all the routines together
         self.globalRoutine.run()#Run the global routine and therefore the whole application
 

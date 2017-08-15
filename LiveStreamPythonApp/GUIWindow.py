@@ -1,63 +1,72 @@
 from PyQt5 import QtWidgets, QtGui
 from ApplicationThread import ApplicationThread
-import welcomewindow
-import stackedwidget
-import algoSetting
+import fullapplayout
 import sys
 
-class WelcomeWindow(QtWidgets.QMainWindow, welcomewindow.Ui_MainWindow):
-    """Creates the main window for the GUI"""
-    
-    def __init__(self):
+class FullAppLayout(QtWidgets.QStackedWidget, fullapplayout.Ui_StackedWidget):
+   """ Creates the main window for the GUI"""
+   
+   def __init__(self):
         super(self.__class__, self).__init__()
-        self.setupUi(self)#Creates the GUI from the mainwindow.py file
-        self.simulationModeButton.clicked.connect(self.startSimulation)#associates the function startSimulation to the start simulation button
-        self.sandBoxModeButton.clicked.connect(self.startSandBox)#associates the function startSandBox to the start sandbox button
-        self.authentificatedModeButton.clicked.connect(self.startAuthentificated)#associates the function startAuthentificated to the start button
+        self.setupUi(self) # Creates the GUI from the mainwindow.py file
+        self.setCurrentWidget(self.WelcomePage)
+        self.simulationModeButton.clicked.connect(self.launchSimulation)
+        self.sandBoxModeButton.clicked.connect(self.launchSandBox)
+        self.authentificatedModeButton.clicked.connect(self.launchAuth)
+        self.connectButton.clicked.connect(self.connecFunc)
+        self.startButton.clicked.connect(self.startApplication)
+        self.stopButton.clicked.connect(self.stopApplication)
+        
+        #initialization of the auth parameters
+        self.apiKey = None
+        self.apiSecret = None
+        self.password = None
 
-    def startSimulation(self):
-        pass
+   #launches the Simulation Mode
+   def launchSimulation(self):
+        self.auth = False
+        self.url = 'https://api.gdax.com'
+        self.setCurrentWidget(self.AlgoPage)
 
-    def startSandBox(self):
-        stack = AuthentificationWindow()
-        self.centralwidget.setCurrentWidget(stack.page_2)
-        print('test')
+   #launches the sandBox Mode
+   def launchSandBox(self):
+        self.auth = True
+        self.url = 'https://api-public.sandbox.gdax.com'
+        self.setCurrentWidget(self.AuthPage)
 
-    def startAuthentificated(self):
-        pass
+   #launches the authentificated mode
+   def launchAuth(self):
+        self.auth = True
+        self.url = 'https://api.gdax.com'
+        self.setCurrentWidget(self.AuthPage)
 
-    #stops the application
-    def stopApplication(self):
-        self.appThread.pre_stop() #prepare the thread to properly stop
-        self.appThread.terminate() #terminates the thread
-        self.startButton.setEnabled(True) #makes the start button clickable again
-        print("Application Stopped ...")
+   #launches the algo
+   def connecFunc(self):
+        self.apiKey = self.aPIKeyLineEdit.text() #gets the API Key
+        self.apiSecret = self.aPISecretLineEdit.text() #gets the API Secret
+        self.password = self.passwordLineEdit.text() #gets the password
+        self.setCurrentWidget(self.AlgoPage)
+
+   #stops the application
+   def stopApplication(self):
+       self.appThread.pre_stop() #prepare the thread to properly stop
+       self.appThread.terminate() #terminates the thread
+       print("Application Stopped ...")
 
     #starts the application
-    def startApplication(self):
-        product = self.productInput.currentText() #gets the product code from the GUI
-        frequency = self.frequencyInput.value() #gets the frequency from the GUI
-        horizon = self.horizonInput.value() #gets the horizon from the GUI
-        save_data = self.dataInput.isChecked() #check if the data need to be saved or not
-        api_key = self.apiKeyInput.text() #gets the API Key
-        api_secret = self.apiSecretInput.text() #gets the API Secret
-        password = self.passwordInput.text() #gets the password
+   def startApplication(self):
+       product = self.fontComboBox.currentText() #gets the product code from the GUI
+       frequency = self.tradeFrequencyInSecondsSpinBox.value() #gets the frequency from the GUI
+       maxHolding = self.maxHoldingUnitOfCryptoCurrencyDoubleSpinBox.value() #gets the horizon from the GUI
+       tradeSize = self.volumePerTradeUnitOfCryptoCurrencyDoubleSpinBox.value()
+       save_data = self.saveDataCheckBox.isChecked() #check if the data need to be saved or not
+       
         
-        print("Application Started ...")
-        self.appThread = ApplicationThread(product, frequency, horizon, save_data, api_key, api_secret, password) #creates a Thread for the application
-        self.appThread.start() #starts the application and runs the thread
-        self.stopButton.setEnabled(True) #enables stop button
-        self.stopButton.clicked.connect(self.stopApplication) #associates the function stop application with the stop button
-        self.startButton.setEnabled(False) #disables the start button to prevent running the application multiple times in parallel
+       print("Application Started ...")
+       self.appThread = ApplicationThread(product, frequency, maxHolding, tradeSize, save_data, self.auth, self.url, self.apiKey, self.apiSecret, self.password) #creates a Thread for the application
+       self.appThread.start() #starts the application and runs the thread
+       self.stopButton.setEnabled(True) #enables stop button
+       self.startButton.setEnabled(False) #disables the start button to prevent running the application multiple times in parallel
  
        
-class AuthentificationWindow(QtWidgets.QStackedWidget, stackedwidget.Ui_StackedWidget):
-    
-    def __init__(self):
-        super(self.__class__, self).__init__()
-        self.setupUi(self)#Creates the GUI from the mainwindow.py file
-        self.startButton.clicked.connect(self.startfunc)
-
-    def startfunc(self):
-        self.setCurrentWidget(self.page_2)
 

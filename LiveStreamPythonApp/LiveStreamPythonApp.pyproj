@@ -22,18 +22,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="algoSetting.py" />
     <Compile Include="ApplicationThread.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="authentificationWindow.py" />
-    <Compile Include="authwindow.py" />
     <Compile Include="ComputationRoutine.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataSetRoutine.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="fullapplayout.py" />
     <Compile Include="GlobalRoutine.py">
       <SubType>Code</SubType>
     </Compile>
@@ -47,11 +45,9 @@
     <Compile Include="Portfolio.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="stackedwidget.py" />
     <Compile Include="TradingRoutine.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="welcomewindow.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />

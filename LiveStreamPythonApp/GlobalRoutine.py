@@ -11,11 +11,8 @@ class GlobalRoutine(object):
         self.tradingRoutine = tradingRoutine
         self.threads = []  #creates a list of threads
 
-    def test(self, a):
-        for i in range(1000000000):
-            print(a)
-
     def run(self):
+        print('Initializing ...')
         #create an observer relationship between the computation and dataset routine
         self.dataSetRoutine.register(self.computationRoutines)
         #creates an observer relationship between the trading and computation routine

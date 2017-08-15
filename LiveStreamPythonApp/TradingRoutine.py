@@ -20,7 +20,7 @@ class TradingRoutine(object):
         if authentificated:
             self.portfolio = Portfolio(float(self.GDAXClient.getPosition()['accounts']['USD']['balance']),float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']), self.max_ccy_holding)
         else:
-            self.portfolio = Portfolio(10000, 0, self.max_ccy_holding)
+            self.portfolio = Portfolio(100000, 0, self.max_ccy_holding)
 
     #creates the file where to save the data
     def create_save_file(self):
