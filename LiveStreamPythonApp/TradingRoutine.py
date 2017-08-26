@@ -7,7 +7,7 @@ from Portfolio import Portfolio
 class TradingRoutine(object):
     """Routine that manages all the trading execution and order management"""
 
-    def __init__(self, computationRoutine, GDAXClient, authentificated, max_ccy_holding, order_size):
+    def __init__(self, computationRoutine, GDAXClient, authentificated, max_ccy_holding, order_size, product):
         self.computationRoutine = computationRoutine
         self.GDAXClient = GDAXClient
         self.authentificated = authentificated
@@ -17,6 +17,8 @@ class TradingRoutine(object):
         self.first = False
         self.wr = None #writter for the data file
         self.create_save_file()
+        self.product = product
+
         if authentificated:
             self.portfolio = Portfolio(float(self.GDAXClient.get_position()['accounts']['USD']['balance']),float(self.GDAXClient.get_position()['accounts']['BTC']['balance']), self.max_ccy_holding)
         else:
@@ -59,8 +61,8 @@ class TradingRoutine(object):
         print('Predictions: Win Long (' + str(prediction[0][0]) + ') - Win Short (' + str(prediction[0][1]) + ')')
         print('Order Passed: ' + order)
         if self.authentificated:
-            print('CryptoCurrency Holding: ' + self.GDAXClient.getPosition()['accounts']['BTC']['balance'])
-            print('Portfolio Value: ' + str(float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']) * self.computationRoutine.current_mid))
+            print('CryptoCurrency Holding: ' + self.GDAXClient.get_position()['accounts']['BTC']['balance'])
+            print('Portfolio Value: ' + str(float(self.GDAXClient.get_position()['accounts']['BTC']['balance']) * self.computationRoutine.current_mid))
 
         else:
             print('CryptoCurrency Holding: ' + str(self.portfolio.get_crypto()))
@@ -94,10 +96,10 @@ class TradingRoutine(object):
     def passOrdersPrediction(self, choice):
         if (choice == 0):
             #pass a buy market order
-            self.GDAXClient.buy({"product_id": self.GDAXClient.productId, "type" : "market", "size" : self.order_size})
+            self.GDAXClient.buy(product_id = self.product, size= self.order_size, type = 'market')
         elif (choice == 1):
             #pass a market sell order 
-            self.GDAXClient.sell({"product_id": self.GDAXClient.productId, "type" : "market", "size" : self.order_size})
+            self.GDAXClient.sell(product_id = self.product, size= self.order_size, type = 'market')
         else:
             pass
 
