@@ -49,7 +49,7 @@ class DataSetRoutine(object):
 
     #creates the dataset to be used for the prediction
     def create_dataset(self):
-        order_book = self.webclient.getProductOrderBook(level = 2, product = self.product) #gets the order book (top 50 bid-asks)
+        order_book = self.webclient.get_product_order_book(self.product, level = 2) #gets the order book (top 50 bid-asks)
         bids = pd.DataFrame(order_book['bids'])#puts all the bids into a dataframe
         bids.columns = ['price', 'size', 'num orders']#rename the columns
         asks = pd.DataFrame(order_book['asks'])#puts all the asks into a dataframe
@@ -103,7 +103,7 @@ class DataSetRoutine(object):
         self.create_save_file() #create the save file
         
         while not self.stop:
-            msg = self.webclient.getProductTicker(product = self.product)
+            msg = self.webclient.get_product_ticker(product_id = self.product)
             
             self.batch = self.batch.append(pd.DataFrame(msg, index = [0]), ignore_index = True) #gets the latest values from the API and appends them to the batch        
 

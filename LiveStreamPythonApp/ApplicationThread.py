@@ -4,7 +4,7 @@ from ComputationRoutine import ComputationRoutine
 from GlobalRoutine import GlobalRoutine
 from TradingRoutine import TradingRoutine
 from MLP import MLP
-import GDAX 
+import gdax as GDAX
 
 class ApplicationThread(QThread):
     """Thread running the Application. It enables to have the GUI and the applicaton
@@ -44,6 +44,6 @@ class ApplicationThread(QThread):
         self.datasetRoutine._stop(self.datasetRoutine.get_myfile())
         self.tradingRoutine._stop(self.tradingRoutine.get_myfile())
         if self.authentificated:
-            self.GDAXClient.cancelAll(product = self.product)
+            self.GDAXClient.cancel_all(product = self.product)
 
 

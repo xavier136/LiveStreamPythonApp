@@ -18,7 +18,7 @@ class TradingRoutine(object):
         self.wr = None #writter for the data file
         self.create_save_file()
         if authentificated:
-            self.portfolio = Portfolio(float(self.GDAXClient.getPosition()['accounts']['USD']['balance']),float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']), self.max_ccy_holding)
+            self.portfolio = Portfolio(float(self.GDAXClient.get_position()['accounts']['USD']['balance']),float(self.GDAXClient.get_position()['accounts']['BTC']['balance']), self.max_ccy_holding)
         else:
             self.portfolio = Portfolio(100000, 0, self.max_ccy_holding)
 
@@ -34,7 +34,7 @@ class TradingRoutine(object):
             self.wr.writerow(['Timestamp', 'Market Long proba (%)', 'Market Short proba (%)', 'Order Type', 'Market Mid', 'Holding', 'Holding Value'])
             self.first = False #no need for the columns names after the first iteration
         if self.authentificated:
-            self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']), float(self.GDAXClient.getPosition()['accounts']['BTC']['balance']) * mid])
+            self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, float(self.GDAXClient.get_position()['accounts']['BTC']['balance']), float(self.GDAXClient.get_position()['accounts']['BTC']['balance']) * mid])
         else:
             self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, portfolio.get_crypto(), portfolio.get_portfolio_value(mid)])
 
