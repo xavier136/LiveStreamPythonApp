@@ -50,6 +50,15 @@ class FullAppLayout(QtWidgets.QStackedWidget, fullapplayout.Ui_StackedWidget):
    #stops the application
    def stopApplication(self):
        self.appThread.pre_stop() #prepare the thread to properly stop
+       report = self.appThread.generateReport() #generates the end of session report
+       self.startDate.setText(report.start_date)
+       self.endDate.setText(report.end_date)
+       self.stratReturn.setText(str(report.strat_return) + '%')
+       self.stratVol.setText(str(report.strat_vol) + '%')
+       self.stratMaxDrawDown.setText(str(report.drawdown) + '%')
+       self.cumulReturn.setScene(report.cumulRet)
+       self.positionEvolution.setScene(report.posEvol)
+       self.setCurrentWidget(self.ResultPage) #dispalys the report page
        self.appThread.terminate() #terminates the thread
        print("Application Stopped ...")
 
@@ -60,10 +69,12 @@ class FullAppLayout(QtWidgets.QStackedWidget, fullapplayout.Ui_StackedWidget):
        maxHolding = self.maxHoldingUnitOfCryptoCurrencyDoubleSpinBox.value() #gets the horizon from the GUI
        tradeSize = self.volumePerTradeUnitOfCryptoCurrencyDoubleSpinBox.value()
        save_data = self.saveDataCheckBox.isChecked() #check if the data need to be saved or not
+       layers = self.LayerNumber.value() #gets the number of layers for the NN
+       neurons = self.LayerNumber_2.value() #gets the number of neurons per layer for the NN
        
         
        print("Application Started ...")
-       self.appThread = ApplicationThread(product, frequency, maxHolding, tradeSize, save_data, self.auth, self.url, self.apiKey, self.apiSecret, self.password) #creates a Thread for the application
+       self.appThread = ApplicationThread(product, frequency, maxHolding, tradeSize, save_data, self.auth, self.url, self.apiKey, self.apiSecret, self.password, layers, neurons) #creates a Thread for the application
        self.appThread.start() #starts the application and runs the thread
        self.stopButton.setEnabled(True) #enables stop button
        self.startButton.setEnabled(False) #disables the start button to prevent running the application multiple times in parallel

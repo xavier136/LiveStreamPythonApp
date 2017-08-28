@@ -14,10 +14,12 @@ class TradingRoutine(object):
         self.max_ccy_holding = max_ccy_holding
         self.order_size = order_size
         self.myfile = None
+        self.file_name = None
         self.first = False
         self.wr = None #writter for the data file
         self.create_save_file()
         self.product = product
+        self.stop = False
 
         if authentificated:
             self.portfolio = Portfolio(float(self.GDAXClient.get_position()['accounts']['USD']['balance']),float(self.GDAXClient.get_position()['accounts']['BTC']['balance']), self.max_ccy_holding)
@@ -26,7 +28,8 @@ class TradingRoutine(object):
 
     #creates the file where to save the data
     def create_save_file(self):
-        self.myfile = open("Positions/"+str(int(time.time()))+".csv", 'w')
+        self.file_name = "Positions/"+str(int(time.time()))+".csv"
+        self.myfile = open(self.file_name, 'w')
         self.wr = csv.writer(self.myfile, quoting = csv.QUOTE_NONE, lineterminator = '\n')
         self.first = True #create a variable to indicate i need the to save the column names
     
@@ -36,9 +39,11 @@ class TradingRoutine(object):
             self.wr.writerow(['Timestamp', 'Market Long proba (%)', 'Market Short proba (%)', 'Order Type', 'Market Mid', 'Holding', 'Holding Value'])
             self.first = False #no need for the columns names after the first iteration
         if self.authentificated:
-            self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, float(self.GDAXClient.get_position()['accounts']['BTC']['balance']), float(self.GDAXClient.get_position()['accounts']['BTC']['balance']) * mid])
+            if not self.stop:
+                self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, float(self.GDAXClient.get_position()['accounts']['BTC']['balance']), float(self.GDAXClient.get_position()['accounts']['BTC']['balance']) * mid])
         else:
-            self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, portfolio.get_crypto(), portfolio.get_portfolio_value(mid)])
+            if not self.stop:
+                self.wr.writerow([datetime.datetime.now(), prediction[0][0], prediction[0][1], order_type, mid, portfolio.get_crypto(), portfolio.get_portfolio_value(mid)])
 
     #getter for the myfile 
     def get_myfile(self): 
@@ -48,6 +53,7 @@ class TradingRoutine(object):
     def _stop(self, file):
         if file is not None:
             file.close()
+            self.stop = True
 
     def printLive(self, prediction, order_type):
         if order_type == 1:
