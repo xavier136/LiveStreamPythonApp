@@ -991,7 +991,7 @@ class Ui_StackedWidget(object):
         self.cryptoCurrencyLabel_2.setText(_translate("StackedWidget", "Number of Layers"))
         self.maxHoldingUnitOfCryptoCurrencyLabel_2.setText(_translate("StackedWidget", "Number of Neurons per Layer"))
         self.label_13.setText(_translate("StackedWidget", "- Cumulative Return Index"))
-        self.label_14.setText(_translate("StackedWidget", "- BitCoin Holdings vs BTC Price"))
+        self.label_14.setText(_translate("StackedWidget", "- Crypto Currency Holdings in units"))
         self.label_17.setText(_translate("StackedWidget", "Start: "))
         self.label_18.setText(_translate("StackedWidget", "End: "))
         self.label_20.setText(_translate("StackedWidget", "Return: "))
