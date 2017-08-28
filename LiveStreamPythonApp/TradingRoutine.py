@@ -93,6 +93,8 @@ class TradingRoutine(object):
     def selectOrder(self, prediction):
         #select the highest probability and only if it's > 50% for selling 
         choice = np.argmax(prediction[0])
+        if prediction[0][0] == prediction[0][1] and prediction[0][0] > 0.5:
+            return -1
         if (choice == 0 and prediction[0][choice] > 0.5) or (choice == 1 and prediction[0][choice] > 0.5):
             return choice
         else:

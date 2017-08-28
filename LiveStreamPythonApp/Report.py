@@ -49,7 +49,9 @@ class Report(object):
         self.strat_return = round(((self.values[-1] / self.values[0]) - 1) * 100, 5)
 
     def compute_volatility(self):
-        self.strat_vol = round(numpy.std(self.values) * 100, 3)
+        returns = [(b-a)/a for a, b in zip(self.values[::1], self.values[1::1])]
+        print(returns)
+        self.strat_vol = round(numpy.std(returns) * 100, 3)
     
     def compute_maxDD(self):
         self.cumul_ret = [x / self.values[0] for x in self.values]
@@ -68,11 +70,11 @@ class Report(object):
         dates = [datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S.%f') for x in self.dates]
         plt.plot(dates, self.cumul_ret)
         plt.gca().yaxis.set_minor_formatter(NullFormatter())
-        plt.gca().yaxis.set_major_locator( MultipleLocator(base=0.0001) )
+        plt.gca().yaxis.set_major_locator( MultipleLocator(base=0.11) )
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%0.1f'))
         plt.gca().xaxis.set_minor_formatter(NullFormatter())
         plt.gca().xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        plt.gca().xaxis.set_major_locator( MinuteLocator(interval = 15) )
+        plt.gca().xaxis.set_major_locator( MinuteLocator(interval = 5) )
         plt.savefig('Graphs/cumulGraph.png')
         pic = QtGui.QPixmap("Graphs/cumulGraph.png").scaled(400, 300)
         scene.addItem(QtWidgets.QGraphicsPixmapItem(pic)) 
@@ -87,7 +89,7 @@ class Report(object):
         plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%0.01f'))
         plt.gca().xaxis.set_minor_formatter(NullFormatter())
         plt.gca().xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        plt.gca().xaxis.set_major_locator( MinuteLocator(interval = 15) )
+        plt.gca().xaxis.set_major_locator( MinuteLocator(interval = 5) )
         plt.savefig('Graphs/posGraph.png')
         pic = QtGui.QPixmap("Graphs/posGraph.png").scaled(400, 300)
         scene.addItem(QtWidgets.QGraphicsPixmapItem(pic)) 
